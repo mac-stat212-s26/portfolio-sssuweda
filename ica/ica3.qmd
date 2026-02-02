@@ -1,0 +1,11 @@
+---
+title: "ica3"
+format: html
+---
+
+```{r}
+library(tidyverse)
+```
+
+
+

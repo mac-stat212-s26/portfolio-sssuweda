@@ -1,0 +1,90 @@
+---
+title: "HW1tidy"
+format: html
+---
+
+#HW 1, wrangling the language data set with good viz and bad viz examples
+
+#Research question: What are the most spoken languages and what countries do they appear in?
+
+```{r}
+library(tidyverse)
+library(dplyr)
+
+dataset <- africa
+```
+
+
+#What are the most common languages?
+
+```{r}
+dataset|> count(language, sort = TRUE)
+```
+##These languages are spoken in N many countries in Africa, Soninke and Arabic are popular
+
+
+#Seperate top 3 most common languages
+```{r}
+common_langs <- dataset |> count(language, sort = TRUE) |> slice_head(n = 3)
+```
+
+#Find the countries included in each of the top 3
+
+```{r}
+dataset |> filter(language %in% common_langs$language) |> 
+distinct(language, country) |> 
+arrange(language, country)
+```
+
+
+#What families are the most common languages in?
+
+```{r}
+dataset |> filter(language %in% common_langs$language) |> 
+distinct(language, family)
+```
+
+#add this to our common languages data set with a join command
+
+```{r}
+common_langs |>   left_join(
+    dataset |>
+      distinct(language, family),
+    by = "language" #use this by for join
+  )
+```
+#save the countries we want to make a viz for in #its own set
+```{r}
+top_3 <- dataset |>
+  filter(language %in% common_langs$language) |>
+  distinct(language, country)
+```
+
+```{r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(top_3, aes(x=country, y=language)) + geom_tile()
+```
+
+#bad example...
+
+```{r}
+refactor_country <- top_3 |> count(country, sort = TRUE)
+```
+
+```{r}
+common_langs |>  arrange(n) |>ggplot(aes(x = language, y=n))+ geom_col(fill="green") +
+  coord_flip() 
+```
+
+#using the big data set
+#scale or the fill will look small
+
+```{r}
+ggplot(dataset, aes(x=native_speakers, fill= "family")) + geom_density(alpha=0.5) +  scale_x_log10()
+```
+
+
+
