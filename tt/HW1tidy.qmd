@@ -76,13 +76,15 @@ refactor_country <- top_3 |> count(country, sort = TRUE)
 
 ```{r}
 common_langs |>  arrange(n) |>ggplot(aes(x = language, y=n))+ geom_col(fill="green") +
-  coord_flip()
+  coord_flip() 
 ```
 
 #using the big data set
 #scale or the fill will look small
 
 ```{r}
-dataset |> ggplot(aes(x=native_speakers, fill= "family")) + geom_density(alpha=0.5) +  scale_x_log10()
+ggplot(dataset, aes(x=native_speakers, fill= "family")) + geom_density(alpha=0.5) +  scale_x_log10()
 ```
+
+
 
